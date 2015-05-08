@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nf:module xmlns:nf="http://www.NetFPGA.org/NF2_register_system" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.NetFPGA.org/NF2_register_system NF2_register_system.xsd ">
+	<nf:name>wildcard_match</nf:name>
+	<nf:prefix>openflow_wildcard_lookup</nf:prefix>
+	<nf:location>udp</nf:location>
+	<nf:description>wildcard match lookup</nf:description>
+	<nf:blocksize>4096</nf:blocksize>
+	<nf:registers>
+		<nf:register>
+			<nf:name>action</nf:name>
+			<nf:description>openflow action field</nf:description>
+			<nf:type>wildcard_action</nf:type>
+		</nf:register>
+		<nf:register>
+			<nf:name>cmp_mask</nf:name>
+			<nf:description>openflow entry-mask field</nf:description>
+			<nf:type>wildcard_entry</nf:type>
+		</nf:register>
+		<nf:register>
+			<nf:name>cmp</nf:name>
+			<nf:description>openflow entry field</nf:description>
+			<nf:type>wildcard_entry</nf:type>
+		</nf:register>
+		<nf:register>
+			<nf:name>read_addr</nf:name>
+			<nf:description>specifies which table to be read</nf:description>
+			<nf:type>generic_software32</nf:type>
+		</nf:register>
+		<nf:register>
+			<nf:name>write_addr</nf:name>
+			<nf:description>specifies which table to be written</nf:description>
+			<nf:type>generic_software32</nf:type>
+		</nf:register>
+		<nf:register>
+			<nf:name>bytes_hit</nf:name>
+			<nf:description>indicates how many bytes hit the table</nf:description>
+			<nf:type>wildcard_counter</nf:type>
+		</nf:register>
+		<nf:register>
+			<nf:name>pkts_hit</nf:name>
+			<nf:description>indicates how many packets hit the table</nf:description>
+			<nf:type>wildcard_counter</nf:type>
+		</nf:register>
+		<nf:register>
+			<nf:name>dummy_1</nf:name>
+			<nf:description>dummy software register</nf:description>
+			<nf:type>generic_software32</nf:type>
+		</nf:register>
+		<nf:register>
+			<nf:name>dummy_2</nf:name>
+			<nf:description>dummy software regsiter</nf:description>
+			<nf:type>generic_software32</nf:type>
+		</nf:register>
+		<nf:register>
+			<nf:name>last_seen_ts</nf:name>
+			<nf:description>last seen timestamps</nf:description>
+			<nf:type>wildcard_counter</nf:type>
+		</nf:register>
+	</nf:registers>
+	<nf:constants>
+		<nf:constant>
+			<nf:name>:OPENFLOW_WILDCARD_TABLE_SIZE</nf:name>
+			<nf:value>32</nf:value>
+		</nf:constant>
+		<nf:constant>
+			<nf:name>:OPENFLOW_WILDCARD_NUM_DATA_WORDS_USED</nf:name>
+			<nf:value>:OPENFLOW_ACTION_WIDTH / :OPENFLOW_WILDCARD_TABLE_SIZE</nf:value>
+		</nf:constant>
+		<nf:constant>
+			<nf:name>:OPENFLOW_WILDCARD_NUM_CMP_WORDS_USED</nf:name>
+			<nf:value>:OPENFLOW_ENTRY_WIDTH / :OPENFLOW_WILDCARD_TABLE_SIZE + 1</nf:value>
+		</nf:constant>
+	</nf:constants>
+	<nf:types>
+		<nf:type xsi:type="nf:SimpleType">
+			<nf:name>wildcard_action</nf:name>
+			<nf:width>:OPENFLOW_ACTION_WIDTH</nf:width>
+		</nf:type>
+		<nf:type xsi:type="nf:SimpleType">
+			<nf:name>wildcard_entry</nf:name>
+			<nf:width>:OPENFLOW_ENTRY_WIDTH</nf:width>
+		</nf:type>
+		<nf:type xsi:type="nf:SimpleType">
+			<nf:name>wildcard_counter</nf:name>
+			<nf:width>:OPENFLOW_WILDCARD_TABLE_SIZE * 32</nf:width>
+		</nf:type>
+	</nf:types>
+</nf:module>

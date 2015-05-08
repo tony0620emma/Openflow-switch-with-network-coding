@@ -1,0 +1,19 @@
+Abstract
+-------------------
+
+The following scripts are prepared to assist you to set up NetFPGA-OpenFlow.
+ regress.sh
+ of_start.sh
+ of_stop.sh
+
+
+Instruction
+-------------------
+
+Run all the followings from your home directory with root privilege:
+1.In order to perform OpenFlow regression tests, run regress.sh
+2.In order to start the switch and connect to the controller, run of_start.sh
+  from your home directory.
+3.To tear down the connection and stop the switch, run of_stop.sh from your
+  home directory
+

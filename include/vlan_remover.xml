@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nf:module xmlns:nf="http://www.NetFPGA.org/NF2_register_system" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.NetFPGA.org/NF2_register_system NF2_register_system.xsd ">
+	<nf:name>vlan_remover</nf:name>
+	<nf:prefix>vlan_remover</nf:prefix>
+	<nf:location>udp</nf:location>
+	<nf:description>Remove vlan tag and ethtype if ethtype is vlan, and store them into module header</nf:description>
+	<nf:blocksize>64</nf:blocksize>
+	<nf:registers>
+	</nf:registers>
+	<nf:constants>
+		<nf:constant>
+			<nf:name>:VLAN_CTRL_WORD</nf:name>
+			<nf:width>8</nf:width>
+			<nf:value>0x42</nf:value>
+		</nf:constant>
+		<nf:constant>
+			<nf:name>:VLAN_ETHERTYPE</nf:name>
+			<nf:width>16</nf:width>
+			<nf:value>0x8100</nf:value>
+		</nf:constant>
+	</nf:constants>
+	<nf:types>
+	</nf:types>
+</nf:module>

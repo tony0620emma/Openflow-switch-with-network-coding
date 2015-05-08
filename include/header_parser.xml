@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nf:module xmlns:nf="http://www.NetFPGA.org/NF2_register_system" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.NetFPGA.org/NF2_register_system NF2_register_system.xsd ">
+	<nf:name>header_parser</nf:name>
+	<nf:prefix>header_parser</nf:prefix>
+	<nf:location>udp</nf:location>
+	<nf:description>Chop ether/IP/UDP-TCP header into 11 tuples</nf:description>
+	<nf:blocksize>64</nf:blocksize>
+	<nf:registers>
+	</nf:registers>
+	<nf:constants>
+		<nf:constant>
+			<nf:name>:ETH_TYPE_IP</nf:name>
+			<nf:width>16</nf:width>
+			<nf:value>0x0800</nf:value>
+		</nf:constant>
+		<nf:constant>
+			<nf:name>:ETH_TYPE_ARP</nf:name>
+			<nf:width>16</nf:width>
+			<nf:value>0x0806</nf:value>
+		</nf:constant>
+		<nf:constant>
+			<nf:name>:IP_PROTO_TCP</nf:name>
+			<nf:width>8</nf:width>
+			<nf:value>0x06</nf:value>
+		</nf:constant>
+		<nf:constant>
+			<nf:name>:IP_PROTO_UDP</nf:name>
+			<nf:width>8</nf:width>
+			<nf:value>0x11</nf:value>
+		</nf:constant>
+		<nf:constant>
+			<nf:name>:IP_PROTO_ICMP</nf:name>
+			<nf:width>8</nf:width>
+			<nf:value>0x01</nf:value>
+		</nf:constant>
+	</nf:constants>
+	<nf:types>
+	</nf:types>
+</nf:module>

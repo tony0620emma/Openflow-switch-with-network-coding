@@ -1,0 +1,98 @@
+#!/usr/bin/perl
+
+use strict;
+use SimLib;
+use NF::RegressLib;
+use Test::TestLib;
+use OpenFlowLib;
+use NFUtils::SimplePacket;
+use NFOpenFlowTester;
+
+
+my @interfaces = ("eth1", "nf2c0", "eth2", "nf2c1");
+my $total_errors = 0;
+
+nftest_init(\@ARGV,\@interfaces,);
+NFOpenFlowTester::resetNF2Reg();
+nftest_start(\@interfaces);
+
+#sleep 2;
+
+foreach my $i (0..1) {
+  my $srcport = $i * 2;
+  unless ($i == 0 ) {
+
+    ####################################################################
+    # Setup the fields
+    #
+    my $outports = [0x01];
+
+    my $fields =
+       {NFUtils::SimplePacket::TRANSP_DST() => [0x1111],
+       NFUtils::SimplePacket::TRANSP_SRC() => [0x2222],
+       NFUtils::SimplePacket::IP_PROTO() => [NFUtils::SimplePacket::IP_PROTO_UDP],
+       NFUtils::SimplePacket::IP_DST() => [0x4222224],
+       NFUtils::SimplePacket::IP_SRC() => [0x5111115],
+       NFUtils::SimplePacket::ETH_TYPE() => [NFUtils::SimplePacket::ETH_TYPE_IP],
+       NFUtils::SimplePacket::ETH_DST() => ["88:11:11:11:11:88"],
+       NFUtils::SimplePacket::ETH_SRC() => ["77:11:11:11:11:77"],
+       NFUtils::SimplePacket::SRC_PORT() => [$srcport],
+       NFUtils::SimplePacket::IP_TOS() => [0],
+       NFUtils::SimplePacket::VLAN_TAG() => [0xffff],
+       NFUtils::SimplePacket::PKT_TYPE() => [NFUtils::SimplePacket::PKT_TYPE_UDP]};
+
+    my $table = OpenFlowTable->new(iface => 'nf2c0');
+
+    my $delay_us = 8;
+
+    my $num_iter = 1;
+    my $num_pkts = 100;
+    my $num_table_entries = 1;
+
+    my $nf2_action_flag = 0;
+    my $set_vlan_vid = 0;
+    my $set_vlan_pcp = 0;
+    my $set_dl_src = 0;
+    my $set_dl_dst = 0;
+    my $set_nw_src = 0;
+    my $set_nw_dst = 0;
+
+    NFOpenFlowTester::clearHitsMissesCounters();
+
+    ####################################################################
+    # execute the simulation
+    #
+    NFOpenFlowTester::runRandomRegress(NFOpenFlowTester::START_DELAY() => $delay_us,
+                                       NFOpenFlowTester::NUM_ITERATIONS() => $num_iter,
+                                       NFOpenFlowTester::NUM_PKTS() => $num_pkts,
+                                       NFOpenFlowTester::NUM_FLOW_ENTRIES() => $num_table_entries,
+                                       NFOpenFlowTester::TABLE() => $table,
+                                       NFOpenFlowTester::FLOW_ENTRY_FIELDS() => $fields,
+                                       NFOpenFlowTester::PKT_FIELDS() => $fields,
+                                       NFOpenFlowTester::EXP_PKT_FIELDS() => $fields,
+                                       NFOpenFlowTester::OUTPUT_PORTS() => $outports,
+                                       NFOpenFlowTester::NF2_ACTION_FLAG() => $nf2_action_flag,
+                                       NFOpenFlowTester::SET_VLAN_VID() => $set_vlan_vid,
+                                       NFOpenFlowTester::SET_VLAN_PCP() => $set_vlan_pcp,
+                                       NFOpenFlowTester::SET_DL_SRC() => $set_dl_src,
+                                       NFOpenFlowTester::SET_DL_DST() => $set_dl_dst,
+                                       NFOpenFlowTester::SET_NW_SRC() => $set_nw_src,
+                                       NFOpenFlowTester::SET_NW_DST() => $set_nw_dst,
+                                       NFOpenFlowTester::IFACE_MAP() => \@interfaces);
+    sleep 2;
+    }
+  }
+
+my $unmatched_hoh = nftest_finish();
+$total_errors += nftest_print_errors($unmatched_hoh);
+$total_errors += nftest_get_badReads();
+
+if ($total_errors==0) {
+  print "SUCCESS!\n";
+        exit 0;
+}
+else {
+  print "FAIL: $total_errors errors\n";
+        exit 1;
+}
+

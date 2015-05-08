@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nf:module xmlns:nf="http://www.NetFPGA.org/NF2_register_system" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.NetFPGA.org/NF2_register_system NF2_register_system.xsd ">
+	<nf:name>watchdog</nf:name>
+	<nf:prefix>wdt</nf:prefix>
+	<nf:location>udp</nf:location>
+	<nf:description>Watchdog timer</nf:description>
+	<nf:blocksize>256</nf:blocksize>
+	<nf:registers>
+		<nf:register>
+		  <nf:name>enable_flg</nf:name>
+			<nf:description>Watchdog timer enable flag</nf:description>
+			<nf:type>generic_software32</nf:type>
+		</nf:register>
+		<nf:register>
+		  <nf:name>counter</nf:name>
+			<nf:description>Watchdog counter</nf:description>
+			<nf:type>generic_hardware32</nf:type>
+		</nf:register>
+	</nf:registers>
+	<nf:constants>
+		<nf:constant>
+			<nf:name>CPCI_REG_CTRL</nf:name>
+			<nf:value>0x8</nf:value>
+		</nf:constant>
+	</nf:constants>
+	<nf:types>
+	</nf:types>
+</nf:module>

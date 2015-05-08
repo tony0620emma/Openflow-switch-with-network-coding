@@ -1,0 +1,28 @@
+v1.0.0 - 12 Mar 2010
+--------------------
+    - Added supported actions on NetFPGA:
+       In addition to dst/src MAC addresses rewrite,
+       VLAN ID, VLAN PCP, dst/src IP addresses, IP TOS, dst/src UDP/TCP
+       ports rewrite with IP and UDP/TCP checksum recalculation are now
+       supported. Packets with IP options are supported.
+    - Expand one entry field for IP TOS matching.
+    - Added capability of ARP fields matching.
+
+v0.9.0 - 04 Aug 2009
+--------------------
+    - Adapted to NetFPGA package 2.0
+    - Added supported action on NetFPGA:
+       dst/src MAC address rewrite
+    - Added entry key
+       It parses all the eleven tuples including VLAN priority bits,
+       supported on OpenFlow 0.9.0
+    - Improved SLICE usage efficiency
+       New fallthrough_small_fifo is now used in bram output_queues module
+    - Supported Link status checking
+       done by "nf2_download"'s argument. Add "-r" option to activate it.
+        e.g.   nf2_download -r openflow_switch
+    - Fixed bug
+       * Deadlock happened when transmitting continuous small packets because
+         input_fifo size on output_port_lookup was large
+         -> Adjusted the fifo size
+         (Reported and fixed by NetFPGA-OpenFlow user.)

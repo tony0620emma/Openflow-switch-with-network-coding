@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nf:module xmlns:nf="http://www.NetFPGA.org/NF2_register_system" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.NetFPGA.org/NF2_register_system NF2_register_system.xsd ">
+	<nf:name>openflow_output_port_lookup</nf:name>
+	<nf:prefix>openflow_lookup</nf:prefix>
+	<nf:location>udp</nf:location>
+	<nf:description>Output Port Lookup for OpenFlow hardware datapath</nf:description>
+	<nf:blocksize>256</nf:blocksize>
+	<nf:registers>
+		<nf:register>
+			<nf:name>wildcard_misses</nf:name>
+			<nf:description>Wildcard match miss counter</nf:description>
+			<nf:type>generic_counter32</nf:type>
+		</nf:register>
+		<nf:register>
+			<nf:name>wildcard_hits</nf:name>
+			<nf:description>Wildcard match hit counter</nf:description>
+			<nf:type>generic_counter32</nf:type>
+		</nf:register>
+		<nf:register>
+			<nf:name>exact_misses</nf:name>
+			<nf:description>Exact match miss counter</nf:description>
+			<nf:type>generic_counter32</nf:type>
+		</nf:register>
+		<nf:register>
+			<nf:name>exact_hits</nf:name>
+			<nf:description>Exact match hit counter</nf:description>
+			<nf:type>generic_counter32</nf:type>
+		</nf:register>
+		<nf:register>
+			<nf:name>num_pkts_dropped</nf:name>
+			<nf:description>dropped packet counter</nf:description>
+			<nf:type>openflow_output_queues_width</nf:type>
+		</nf:register>
+		<nf:register>
+			<nf:name>dumy_software_0</nf:name>
+			<nf:description>dummy software register</nf:description>
+			<nf:type>generic_software32</nf:type>
+		</nf:register>
+		<nf:register>
+			<nf:name>dumy_software_1</nf:name>
+			<nf:description>dummy software register</nf:description>
+			<nf:type>generic_software32</nf:type>
+		</nf:register>
+		<nf:register>
+			<nf:name>timer</nf:name>
+			<nf:description>timer</nf:description>
+			<nf:type>generic_hardware32</nf:type>
+		</nf:register>
+	</nf:registers>
+	<nf:constants>
+		<nf:constant>
+			<nf:name>:FAST_CLOCK_PERIOD</nf:name>
+			<nf:value>8</nf:value>
+		</nf:constant>
+	</nf:constants>
+	<nf:types>
+		<nf:type xsi:type="nf:SimpleType">
+			<nf:name>openflow_output_queues_width</nf:name>
+			<nf:description>openflow_output_queues_width</nf:description>
+			<nf:width>32*8</nf:width>
+		</nf:type>
+	</nf:types>
+</nf:module>

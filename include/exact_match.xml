@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nf:module xmlns:nf="http://www.NetFPGA.org/NF2_register_system" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.NetFPGA.org/NF2_register_system NF2_register_system.xsd ">
+	<nf:name>exact_match</nf:name>
+	<nf:prefix>exact_match</nf:prefix>
+	<nf:location>udp</nf:location>
+	<nf:description>exact match lookup</nf:description>
+	<nf:blocksize>64</nf:blocksize>
+	<nf:registers>
+	</nf:registers>
+	<nf:constants>
+		<nf:constant>
+			<nf:name>:OPENFLOW_EXACT_ENTRY_PKT_COUNTER_WIDTH</nf:name>
+			<nf:value>25</nf:value>
+		</nf:constant>
+		<nf:constant>
+			<nf:name>:OPENFLOW_EXACT_ENTRY_PKT_COUNTER_POS</nf:name>
+			<nf:value>0</nf:value>
+		</nf:constant>
+		<nf:constant>
+			<nf:name>:OPENFLOW_EXACT_ENTRY_LAST_SEEN_WIDTH</nf:name>
+			<nf:value>7</nf:value>
+		</nf:constant>
+		<nf:constant>
+			<nf:name>:OPENFLOW_EXACT_ENTRY_LAST_SEEN_POS</nf:name>
+			<nf:value>25</nf:value>
+		</nf:constant>
+		<nf:constant>
+			<nf:name>:OPENFLOW_EXACT_ENTRY_BYTE_COUNTER_WIDTH</nf:name>
+			<nf:value>32</nf:value>
+		</nf:constant>
+		<nf:constant>
+			<nf:name>:OPENFLOW_EXACT_ENTRY_BYTE_COUNTER_POS</nf:name>
+			<nf:value>32</nf:value>
+		</nf:constant>
+		<nf:constant>
+			<nf:name>:OPENFLOW_EXACT_ENTRY_HDR_BASE_POS</nf:name>
+			<nf:value>0x0</nf:value>
+		</nf:constant>
+		<nf:constant>
+			<nf:name>:OPENFLOW_EXACT_ENTRY_COUNTERS_POS</nf:name>
+			<nf:value>0x8</nf:value>
+		</nf:constant>
+		<nf:constant>
+			<nf:name>:OPENFLOW_EXACT_ENTRY_ACTION_BASE_POS</nf:name>
+			<nf:value>0xa</nf:value>
+		</nf:constant>
+	</nf:constants>
+	<nf:types>
+	</nf:types>
+</nf:module>

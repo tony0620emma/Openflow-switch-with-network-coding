@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nf:module xmlns:nf="http://www.NetFPGA.org/NF2_register_system" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.NetFPGA.org/NF2_register_system NF2_register_system.xsd ">
+	<nf:name>match_arbiter</nf:name>
+	<nf:prefix>match_arbiter</nf:prefix>
+	<nf:location>udp</nf:location>
+	<nf:description>Arbitration between exact and wildcard lookups results</nf:description>
+	<nf:blocksize>64</nf:blocksize>
+	<nf:registers>
+	</nf:registers>
+	<nf:constants>
+		<nf:constant>
+			<nf:name>:OPENFLOW_ENTRY_TRANSP_DST_WIDTH</nf:name>
+			<nf:value>16</nf:value>
+		</nf:constant>
+		<nf:constant>
+			<nf:name>:OPENFLOW_ENTRY_TRANSP_DST_POS</nf:name>
+			<nf:value>0</nf:value>
+		</nf:constant>
+		<nf:constant>
+			<nf:name>:OPENFLOW_ENTRY_TRANSP_SRC_WIDTH</nf:name>
+			<nf:value>16</nf:value>
+		</nf:constant>
+		<nf:constant>
+			<nf:name>:OPENFLOW_ENTRY_TRANSP_SRC_POS</nf:name>
+			<nf:value>:OPENFLOW_ENTRY_TRANSP_DST_POS + :OPENFLOW_ENTRY_TRANSP_DST_WIDTH</nf:value>
+		</nf:constant>
+		<nf:constant>
+			<nf:name>:OPENFLOW_ENTRY_IP_PROTO_WIDTH</nf:name>
+			<nf:value>8</nf:value>
+		</nf:constant>
+		<nf:constant>
+			<nf:name>:OPENFLOW_ENTRY_IP_PROTO_POS</nf:name>
+			<nf:value>:OPENFLOW_ENTRY_TRANSP_SRC_POS + :OPENFLOW_ENTRY_TRANSP_SRC_WIDTH</nf:value>
+		</nf:constant>
+		<nf:constant>
+			<nf:name>:OPENFLOW_ENTRY_IP_DST_WIDTH</nf:name>
+			<nf:value>32</nf:value>
+		</nf:constant>
+		<nf:constant>
+			<nf:name>:OPENFLOW_ENTRY_IP_DST_POS</nf:name>
+			<nf:value>:OPENFLOW_ENTRY_IP_PROTO_POS + :OPENFLOW_ENTRY_IP_PROTO_WIDTH</nf:value>
+		</nf:constant>
+		<nf:constant>
+			<nf:name>:OPENFLOW_ENTRY_IP_SRC_WIDTH</nf:name>
+			<nf:value>32</nf:value>
+		</nf:constant>
+		<nf:constant>
+			<nf:name>:OPENFLOW_ENTRY_IP_SRC_POS</nf:name>
+			<nf:value>:OPENFLOW_ENTRY_IP_DST_POS + :OPENFLOW_ENTRY_IP_DST_WIDTH</nf:value>
+		</nf:constant>
+		<nf:constant>
+			<nf:name>:OPENFLOW_ENTRY_ETH_TYPE_WIDTH</nf:name>
+			<nf:value>16</nf:value>
+		</nf:constant>
+		<nf:constant>
+			<nf:name>:OPENFLOW_ENTRY_ETH_TYPE_POS</nf:name>
+			<nf:value>:OPENFLOW_ENTRY_IP_SRC_POS + :OPENFLOW_ENTRY_IP_SRC_WIDTH</nf:value>
+		</nf:constant>
+		<nf:constant>
+			<nf:name>:OPENFLOW_ENTRY_ETH_DST_WIDTH</nf:name>
+			<nf:value>48</nf:value>
+		</nf:constant>
+		<nf:constant>
+			<nf:name>:OPENFLOW_ENTRY_ETH_DST_POS</nf:name>
+			<nf:value>:OPENFLOW_ENTRY_ETH_TYPE_POS + :OPENFLOW_ENTRY_ETH_TYPE_WIDTH</nf:value>
+		</nf:constant>
+		<nf:constant>
+			<nf:name>:OPENFLOW_ENTRY_ETH_SRC_WIDTH</nf:name>
+			<nf:value>48</nf:value>
+		</nf:constant>
+		<nf:constant>
+			<nf:name>:OPENFLOW_ENTRY_ETH_SRC_POS</nf:name>
+			<nf:value>:OPENFLOW_ENTRY_ETH_DST_POS + :OPENFLOW_ENTRY_ETH_DST_WIDTH</nf:value>
+		</nf:constant>
+		<nf:constant>
+			<nf:name>:OPENFLOW_ENTRY_SRC_PORT_WIDTH</nf:name>
+			<nf:value>8</nf:value>
+		</nf:constant>
+		<nf:constant>
+			<nf:name>:OPENFLOW_ENTRY_SRC_PORT_POS</nf:name>
+			<nf:value>:OPENFLOW_ENTRY_ETH_SRC_POS + :OPENFLOW_ENTRY_ETH_SRC_WIDTH</nf:value>
+		</nf:constant>
+		<nf:constant>
+			<nf:name>:OPENFLOW_ENTRY_IP_TOS_WIDTH</nf:name>
+			<nf:value>8</nf:value>
+		</nf:constant>
+		<nf:constant>
+			<nf:name>:OPENFLOW_ENTRY_IP_TOS_POS</nf:name>
+			<nf:value>:OPENFLOW_ENTRY_SRC_PORT_POS + :OPENFLOW_ENTRY_SRC_PORT_WIDTH</nf:value>
+		</nf:constant>
+		<nf:constant>
+			<nf:name>:OPENFLOW_ENTRY_VLAN_ID_WIDTH</nf:name>
+			<nf:value>16</nf:value>
+		</nf:constant>
+		<nf:constant>
+			<nf:name>:OPENFLOW_ENTRY_VLAN_ID_POS</nf:name>
+			<nf:value>:OPENFLOW_ENTRY_IP_TOS_POS + :OPENFLOW_ENTRY_IP_TOS_WIDTH</nf:value>
+		</nf:constant>
+		<nf:constant>
+			<nf:name>:OPENFLOW_ENTRY_WIDTH</nf:name>
+			<nf:value>248</nf:value>
+		</nf:constant>
+		<nf:constant>
+			<nf:name>:OPENFLOW_ACTION_WIDTH</nf:name>
+			<nf:description>The actionfield is composed of a bitmask specifying actions to take and arguments.</nf:description>
+			<nf:value>320</nf:value>
+		</nf:constant>
+
+		<nf:constant>
+			<nf:name>:OPENFLOW_FORWARD_BITMASK_WIDTH</nf:name>
+			<nf:description>Ports to forward on</nf:description>
+			<nf:value>16</nf:value>
+		</nf:constant>
+		<nf:constant>
+			<nf:name>:OPENFLOW_FORWARD_BITMASK_POS</nf:name>
+			<nf:value>0</nf:value>
+		</nf:constant>
+		<nf:constant>
+			<nf:name>:OPENFLOW_NF2_ACTION_FLAG_WIDTH</nf:name>
+			<nf:value>16</nf:value>
+		</nf:constant>
+		<nf:constant>
+			<nf:name>:OPENFLOW_NF2_ACTION_FLAG_POS</nf:name>
+			<nf:value>:OPENFLOW_FORWARD_BITMASK_POS + :OPENFLOW_FORWARD_BITMASK_WIDTH</nf:value>
+		</nf:constant>
+		<nf:constant>
+			<nf:name>:OPENFLOW_SET_VLAN_VID_WIDTH</nf:name>
+			<nf:description>Vlan ID to be replaced</nf:description>
+			<nf:value>16</nf:value>
+		</nf:constant>
+		<nf:constant>
+			<nf:name>:OPENFLOW_SET_VLAN_VID_POS</nf:name>
+			<nf:value>:OPENFLOW_NF2_ACTION_FLAG_POS + :OPENFLOW_NF2_ACTION_FLAG_WIDTH</nf:value>
+		</nf:constant>
+		<nf:constant>
+			<nf:name>:OPENFLOW_SET_VLAN_PCP_WIDTH</nf:name>
+			<nf:description>Vlan priority to be replaced</nf:description>
+			<nf:value>8</nf:value>
+		</nf:constant>
+		<nf:constant>
+			<nf:name>:OPENFLOW_SET_VLAN_PCP_POS</nf:name>
+			<nf:value>:OPENFLOW_SET_VLAN_VID_POS + :OPENFLOW_SET_VLAN_VID_WIDTH</nf:value>
+		</nf:constant>
+		<nf:constant>
+			<nf:name>:OPENFLOW_SET_DL_SRC_WIDTH</nf:name>
+			<nf:description>Source MAC address to be replaced</nf:description>
+			<nf:value>48</nf:value>
+		</nf:constant>
+		<nf:constant>
+			<nf:name>:OPENFLOW_SET_DL_SRC_POS</nf:name>
+			<nf:value>:OPENFLOW_SET_VLAN_PCP_POS + :OPENFLOW_SET_VLAN_PCP_WIDTH</nf:value>
+		</nf:constant>
+		<nf:constant>
+			<nf:name>:OPENFLOW_SET_DL_DST_WIDTH</nf:name>
+			<nf:description>Destination MAC address to be replaced</nf:description>
+			<nf:value>48</nf:value>
+		</nf:constant>
+		<nf:constant>
+			<nf:name>:OPENFLOW_SET_DL_DST_POS</nf:name>
+			<nf:value>:OPENFLOW_SET_DL_SRC_POS + :OPENFLOW_SET_DL_SRC_WIDTH</nf:value>
+		</nf:constant>
+		<nf:constant>
+			<nf:name>:OPENFLOW_SET_NW_SRC_WIDTH</nf:name>
+			<nf:description>Source network address to be replaced</nf:description>
+			<nf:value>32</nf:value>
+		</nf:constant>
+		<nf:constant>
+			<nf:name>:OPENFLOW_SET_NW_SRC_POS</nf:name>
+			<nf:value>:OPENFLOW_SET_DL_DST_POS + :OPENFLOW_SET_DL_DST_WIDTH</nf:value>
+		</nf:constant>
+		<nf:constant>
+			<nf:name>:OPENFLOW_SET_NW_DST_WIDTH</nf:name>
+			<nf:description>Destination network address to be replaced</nf:description>
+			<nf:value>32</nf:value>
+		</nf:constant>
+		<nf:constant>
+			<nf:name>:OPENFLOW_SET_NW_DST_POS</nf:name>
+			<nf:value>:OPENFLOW_SET_NW_SRC_POS + :OPENFLOW_SET_NW_SRC_WIDTH</nf:value>
+		</nf:constant>
+		<nf:constant>
+			<nf:name>:OPENFLOW_SET_NW_TOS_WIDTH</nf:name>
+			<nf:description>TOS to be replaced</nf:description>
+			<nf:value>8</nf:value>
+		</nf:constant>
+		<nf:constant>
+			<nf:name>:OPENFLOW_SET_NW_TOS_POS</nf:name>
+			<nf:value>:OPENFLOW_SET_NW_DST_POS + :OPENFLOW_SET_NW_DST_WIDTH</nf:value>
+		</nf:constant>
+		<nf:constant>
+			<nf:name>:OPENFLOW_SET_TP_SRC_WIDTH</nf:name>
+			<nf:description>Source transport port to be replaced</nf:description>
+			<nf:value>16</nf:value>
+		</nf:constant>
+		<nf:constant>
+			<nf:name>:OPENFLOW_SET_TP_SRC_POS</nf:name>
+			<nf:value>:OPENFLOW_SET_NW_TOS_POS + :OPENFLOW_SET_NW_TOS_WIDTH</nf:value>
+		</nf:constant>
+		<nf:constant>
+			<nf:name>:OPENFLOW_SET_TP_DST_WIDTH</nf:name>
+			<nf:description>Destination transport port to be replaced</nf:description>
+			<nf:value>16</nf:value>
+		</nf:constant>
+		<nf:constant>
+			<nf:name>:OPENFLOW_SET_TP_DST_POS</nf:name>
+			<nf:value>:OPENFLOW_SET_TP_SRC_POS + :OPENFLOW_SET_TP_SRC_WIDTH</nf:value>
+		</nf:constant>
+	</nf:constants>
+	<nf:types>
+	</nf:types>
+</nf:module>

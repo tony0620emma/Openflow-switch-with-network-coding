@@ -1,0 +1,4 @@
+test_exact_simple1
+test_exact_simple2
+test_wildcard_simple1
+test_wildcard_simple2

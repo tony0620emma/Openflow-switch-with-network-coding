@@ -55,7 +55,7 @@ module sram_arbiter  #(parameter SRAM_ADDR_WIDTH = 19,
    (// register interface
     input                            sram_reg_req,
     input                            sram_reg_rd_wr_L,    // 1 = read, 0 = write
-    input [`SRAM_REG_ADDR_WIDTH-1:0] sram_reg_addr,
+    input [`SRAM_REG_ADDR_WIDTH-1:0] sram_reg_addr,       // SRAM_REG_ADDR_WIDTH = 22
     input [`CPCI_NF2_DATA_WIDTH-1:0] sram_reg_wr_data,
 
     output reg                             sram_reg_ack,

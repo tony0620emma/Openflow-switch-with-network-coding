@@ -48,7 +48,7 @@ module opl_processor
   #(parameter NUM_OUTPUT_QUEUES = 8,
     parameter DATA_WIDTH = 64,
     parameter CTRL_WIDTH = DATA_WIDTH/8,
-    parameter RESULT_WIDTH = `OPENFLOW_ACTION_WIDTH + `OPENFLOW_ENTRY_SRC_PORT_WIDTH)
+    parameter RESULT_WIDTH = `OPENFLOW_ACTION_WIDTH + `OPENFLOW_ENTRY_SRC_PORT_WIDTH) // OPENFLOW_ENTRY_SRC_PORT_WIDTH = 8
   (// --- interface to results fifo
    input      [RESULT_WIDTH-1:0]           result_fifo_dout,
    output reg                              result_fifo_rd_en,
@@ -261,6 +261,17 @@ module opl_processor
          /* wait until the lookup is done and we have the actions we
           * need to do
           */
+		  
+		 /* WAIT_FOR_INPUT           = 1
+          * WRITE_REPLACEMENTS       = 2
+          * WRITE_OUTPUT_DESTINATION = 4
+          * WRITE_IO_HDR             = 8
+          * HDR_1ST                  = 16
+          * HDR_CONT                 = 32
+          * WRITE_PACKET             = 64
+          * DROP_PKT                 = 12
+          * WRITE_LAST_WORD          = 256
+		  */
          WAIT_FOR_INPUT: begin
             if (!result_fifo_empty) begin
                result_fifo_rd_en = 1;

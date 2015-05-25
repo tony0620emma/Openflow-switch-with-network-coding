@@ -143,13 +143,13 @@
                state         <= MODULE_HDRS;
                if(in_wr) begin
                   // check for the additional word
-                  if(in_ctrl==ADDITIONAL_WORD_CTRL) begin
+                  if(in_ctrl==ADDITIONAL_WORD_CTRL) begin // ADDITIONAL_WORD_CTRL = 8'h40
                      flow_entry[ADDITIONAL_WORD_POS + ADDITIONAL_WORD_SIZE - 1 : ADDITIONAL_WORD_POS]
                                                       <= in_data[ADDITIONAL_WORD_SIZE-1 : 0] & ADDITIONAL_WORD_BITMASK;
-                     is_vlan <= (in_ctrl==`VLAN_CTRL_WORD);
+                     is_vlan <= (in_ctrl==`VLAN_CTRL_WORD); // VLAN_CTRL_WORD = 8'h42
                   end
                   // get the pkt size and the input port
-                  else if(in_ctrl==`IO_QUEUE_STAGE_NUM) begin
+                  else if(in_ctrl==`IO_QUEUE_STAGE_NUM) begin  // IO_QUEUE_STAGE_NUM = 8'hff
                      flow_entry[`OPENFLOW_ENTRY_SRC_PORT_POS + `OPENFLOW_ENTRY_SRC_PORT_WIDTH - 1 : `OPENFLOW_ENTRY_SRC_PORT_POS]
                                                           <= in_data[`IOQ_SRC_PORT_POS + `OPENFLOW_ENTRY_SRC_PORT_WIDTH - 1 : `IOQ_SRC_PORT_POS];
                      if(is_vlan) begin

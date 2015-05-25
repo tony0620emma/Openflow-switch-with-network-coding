@@ -64,6 +64,21 @@ module
    input                                   reset);
    
    
+	fallthrough_small_fifo #(.WIDTH(CTRL_WIDTH+DATA_WIDTH), .MAX_DEPTH_BITS(4))
+      input_fifo
+        (.din           ({in_ctrl, in_data}),  // Data in
+         .wr_en         (in_wr),             // Write enable
+         .rd_en         (in_fifo_rd_en),    // Read the next word
+         .dout          ({in_fifo_ctrl, in_fifo_data}),
+         .prog_full     (),
+         .full          (),
+         .nearly_full   (in_fifo_nearly_full),
+         .empty         (in_fifo_empty),
+         .reset         (reset),
+         .clk           (clk)
+         );
+   
+   
    
    
    

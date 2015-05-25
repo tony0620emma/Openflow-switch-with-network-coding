@@ -63,22 +63,41 @@ module
    input                                   clk,
    input                                   reset);
    
+   //-------------------- Internal Parameters ------------------------
+   localparam WAIT_FOR_INPUT_0 = 0 ,
+			  
    
-	fallthrough_small_fifo #(.WIDTH(CTRL_WIDTH+DATA_WIDTH), .MAX_DEPTH_BITS(4))
-      input_fifo
-        (.din           ({in_ctrl, in_data}),  // Data in
-         .wr_en         (in_wr),             // Write enable
-         .rd_en         (in_fifo_rd_en),    // Read the next word
-         .dout          ({in_fifo_ctrl, in_fifo_data}),
-         .prog_full     (),
-         .full          (),
-         .nearly_full   (in_fifo_nearly_full),
-         .empty         (in_fifo_empty),
-         .reset         (reset),
-         .clk           (clk)
-         );
+   //-------------------- Wires and regs ------------------------
    
+   //-------------------- modules ----------------------------------------------------------
    
+   fallthrough_small_fifo #(.WIDTH(CTRL_WIDTH+DATA_WIDTH), .MAX_DEPTH_BITS(7))
+     packet_fifo_0
+       (.din           ({in_ctrl, in_data}),  // Data in
+        .wr_en         (in_wr_0),             // Write enable
+        .rd_en         (packet_fifo_0_rd_en),    // Read the next word
+        .dout          ({packet_fifo_0_ctrl, packet_fifo_0_data}),
+        .prog_full     (),
+        .full          (),
+        .nearly_full   (packet_fifo_0_nearly_full),
+        .empty         (packet_fifo_0_empty),
+        .reset         (reset),
+        .clk           (clk)
+        );
+   
+   fallthrough_small_fifo #(.WIDTH(CTRL_WIDTH+DATA_WIDTH), .MAX_DEPTH_BITS(2))
+     packet_fifo_1
+       (.din           ({in_ctrl, in_data}),  // Data in
+        .wr_en         (in_wr_1),             // Write enable
+        .rd_en         (packet_fifo_1_rd_en),    // Read the next word
+        .dout          ({packet_fifo_1_ctrl, packet_fifo_1_data}),
+        .prog_full     (),
+        .full          (),
+        .nearly_full   (packet_fifo_1_nearly_full),
+        .empty         (packet_fifo_1_empty),
+        .reset         (reset),
+        .clk           (clk)
+        );
    
    
    

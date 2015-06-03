@@ -74,6 +74,7 @@ module
    //-------------------- Wires and regs ------------------------
    reg [1:0]							   state;
    reg      							   counter;
+   reg                                     coding_state;
    
    reg                                     buffer_fifo_rd_en;
    reg                                     packet_fifo_0_rd_en;
@@ -82,7 +83,7 @@ module
    reg									   in_wr_0;
    reg									   in_wr_1;
    
-   reg [15:0]							   stored_packet_num;
+   reg [15:0]							   waited_packet_num;
    
    wire [DATA_WIDTH-1:0]                   buffer_fifo_data;
    wire [DATA_WIDTH-1:0]                   packet_fifo_0_data;
@@ -134,14 +135,11 @@ module
         );
    
    
-
-   
-
-   
    always @(posedge clk) begin
       if(reset) begin
-        state <= 0;
-		
+        state        <= 0;
+		counter      <= 0;
+		coding_state <= 0;
       end
 	  
 	  else begin
@@ -149,6 +147,10 @@ module
 	  in_wr_0 <= 0;
 	  in_wr_1 <= 0;
 	  out_wr  <= 0;
+	  
+	  buffer_fifo_rd_en   <= 0;
+	  packet_fifo_0_rd_en <= 0;
+      packet_fifo_1_rd_en <= 0;
 		
 		case(state)
 		
@@ -177,11 +179,41 @@ module
 			end //case : STORE_INPUT_0
 			
 			WAIT_FOR_INPUT_1: begin
-			
+			  if(!buffer_fifo_empty) begin
+			    buffer_fifo_rd_en <= 1'b1;
+				  if(buffer_fifo_ctrl == `IO_QUEUE_STAGE_NUM) begin
+				      if(buffer_fifo_data[31:16]waited_packet_num) begin
+					    in_wr_1 <= 1'b1;
+					  end
+					  
+					  else begin
+				        out_ctrl <= buffer_fifo_ctrl;
+					    out_data <= buffer_fifo_data;
+					    out_wr   <= 1'b1;
+				      end
+				  end
+				  
+				  else begin
+				    out_ctrl <= buffer_fifo_ctrl;
+					out_data <= buffer_fifo_data;
+					out_wr   <= 1'b1;
+				  end
+			  end
 			end //case : WAIT_FOR_INPUT_1
-		
-			NETWORK_CODING: begin
+		    
+			/* * * * * * * * * * * * * * * * * * * * * * 
+			 * Suppose that every packet from the      *
+			 * two ports (MAC port 0 and MAC port 1)   *
+			 * has the same length , so we don't need  *
+			 * to do padding on them hence simplify    *
+			 * the work of this module                 *
+			 * * * * * * * * * * * * * * * * * * * * * */
 			
+			NETWORK_CODING: begin
+			  if(!buffer_fifo_empty) begin
+			    buffer_fifo_rd_en <= 1'b1;
+				
+			  end
 			end //case : NETWORK_CODING
 	  
 			default: begin
@@ -190,7 +222,7 @@ module
 					if(buffer_fifo_ctrl == `IO_QUEUE_STAGE_NUM) begin
 						if(buffer_fifo_data[31:16] == 16'd0 || buffer_fifo_data[31:16] == 16'd2) begin
 							in_wr_0           <= 1'b1;
-							stored_packet_num <= buffer_fifo_data[31:16];
+							waited_packet_num <= (buffer_fifo_data[31:16]==16'd0)?16'd2:16'd0;
 							state             <= STORE_INPUT_0;
 						end
 					end // if(buffer_fifo_ctrl == `IO_QUEUE_STAGE_NUM)
@@ -204,9 +236,7 @@ module
 			end // case : WAIT_FOR_INPUT_0
 		
 		endcase // case(state)
-	  
 	  end // else
-	  
    end // always @(posedge clk)
    
 endmodule // XOR_network_coding

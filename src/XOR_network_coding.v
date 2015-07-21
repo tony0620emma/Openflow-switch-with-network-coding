@@ -72,18 +72,18 @@ module
 			  
    
    //-------------------- Wires and regs ------------------------
-   reg [1:0]							   state;
-   reg      							   counter;
+   reg [1:0]				   state;
+   reg      				   counter;
    reg                                     coding_state;
    
    reg                                     buffer_fifo_rd_en;
    reg                                     packet_fifo_0_rd_en;
    reg                                     packet_fifo_1_rd_en;
    
-   reg									   in_wr_0;
-   reg									   in_wr_1;
+   reg					   in_wr_0;
+   reg					   in_wr_1;
    
-   reg [15:0]							   waited_packet_num;
+   reg [15:0]			  	   waited_packet_num;
    
    wire [DATA_WIDTH-1:0]                   buffer_fifo_data;
    wire [DATA_WIDTH-1:0]                   packet_fifo_0_data;
@@ -93,13 +93,13 @@ module
    
    fallthrough_small_fifo #(.WIDTH(CTRL_WIDTH+DATA_WIDTH), .MAX_DEPTH_BITS(2))
      buffer_fifo
-       (.din           ({in_ctrl, in_data}),   // Data in
-        .wr_en         (in_wr),    // Write enable
-        .rd_en         (buffer_fifo_rd_en),    // Read the next word
+       (.din           ({in_ctrl, in_data}),    // Data in
+        .wr_en         (in_wr),    		// Write enable
+        .rd_en         (buffer_fifo_rd_en),     // Read the next word
         .dout          ({buffer_fifo_ctrl, buffer_fifo_data}),
         .prog_full     (),
         .full          (),
-        .nearly_full   (), // buffer_fifo_nearly_full
+        .nearly_full   (),			// buffer_fifo_nearly_full
         .empty         (buffer_fifo_empty),
         .reset         (reset),
         .clk           (clk)
@@ -114,7 +114,7 @@ module
         .dout          ({packet_fifo_0_ctrl, packet_fifo_0_data}),
         .prog_full     (),
         .full          (),
-        .nearly_full   (), // packet_fifo_0_nearly_full
+        .nearly_full   (), 			 // packet_fifo_0_nearly_full
         .empty         (packet_fifo_0_empty),
         .reset         (reset),
         .clk           (clk)
@@ -128,7 +128,7 @@ module
         .dout          ({packet_fifo_1_ctrl, packet_fifo_1_data}),
         .prog_full     (),
         .full          (),
-        .nearly_full   (), // packet_fifo_1_nearly_full
+        .nearly_full   (), 			 // packet_fifo_1_nearly_full
         .empty         (packet_fifo_1_empty),
         .reset         (reset),
         .clk           (clk)
@@ -136,107 +136,106 @@ module
    
    
    always @(posedge clk) begin
-      if(reset) begin
-        state        <= 0;
-		counter      <= 0;
-		coding_state <= 0;
-      end
+     if(reset) begin
+       state        <= 0;
+       counter      <= 0;
+       coding_state <= 0;
+     end
 	  
-	  else begin
-	  //defaults
-	  in_wr_0 <= 0;
-	  in_wr_1 <= 0;
-	  out_wr  <= 0;
+     else begin
+       //defaults
+       in_wr_0 <= 0;
+       in_wr_1 <= 0;
+       out_wr  <= 0;
 	  
-	  buffer_fifo_rd_en   <= 0;
-	  packet_fifo_0_rd_en <= 0;
-      packet_fifo_1_rd_en <= 0;
+       buffer_fifo_rd_en   <= 0;
+       packet_fifo_0_rd_en <= 0;
+       packet_fifo_1_rd_en <= 0;
 		
-		case(state)
+       case(state)
 		
-			STORE_INPUT_0: begin
-			  if(!buffer_fifo_empty) begin
-				buffer_fifo_rd_en <= 1'b1;
-			      case(counter)
-				    
-					MODULE_HDRS: begin
-					  in_wr_0 <= 1'b1;
-					  if(buffer_fifo_ctrl==0) begin
-					    counter <= WAIT_EOP;
-					  end
-					end // case : MODULE_HDRS
+	 STORE_INPUT_0: begin
+	   if(!buffer_fifo_empty) begin
+	     buffer_fifo_rd_en <= 1'b1;
+	     case(counter)
+
+	       MODULE_HDRS: begin
+		 in_wr_0 <= 1'b1;
+		 if(buffer_fifo_ctrl==0) begin
+		   counter <= WAIT_EOP;
+		 end
+	       end // case : MODULE_HDRS
 					
-					WAIT_EOP: begin
-					  in_wr_0 <= 1'b1;
-					  if(buffer_fifo_ctrl!=0) begin
-					    counter <= 0;
-						state   <= WAIT_FOR_INPUT_1;
-					  end
-					end // case : WAIT_EOP
+	       WAIT_EOP: begin
+		 in_wr_0 <= 1'b1;
+		 if(buffer_fifo_ctrl!=0) begin
+		   counter <= 0;
+		   state   <= WAIT_FOR_INPUT_1;
+		 end
+	       end // case : WAIT_EOP
 					
-				  endcase // case(counter)
-			  end // if(!buffer_fifo_empty)
-			end //case : STORE_INPUT_0
+	     endcase // case(counter)
+	   end // if(!buffer_fifo_empty)
+	 end //case : STORE_INPUT_0
 			
-			WAIT_FOR_INPUT_1: begin
-			  if(!buffer_fifo_empty) begin
-			    buffer_fifo_rd_en <= 1'b1;
-				  if(buffer_fifo_ctrl == `IO_QUEUE_STAGE_NUM) begin
-				      if(buffer_fifo_data[31:16]waited_packet_num) begin
-					    in_wr_1 <= 1'b1;
-					  end
+	 WAIT_FOR_INPUT_1: begin
+	   if(!buffer_fifo_empty) begin
+	     buffer_fifo_rd_en <= 1'b1;
+	     if(buffer_fifo_ctrl == `IO_QUEUE_STAGE_NUM) begin
+	       if(buffer_fifo_data[31:16]waited_packet_num) begin
+		 in_wr_1 <= 1'b1;
+	       end
 					  
-					  else begin
-				        out_ctrl <= buffer_fifo_ctrl;
-					    out_data <= buffer_fifo_data;
-					    out_wr   <= 1'b1;
-				      end
-				  end
+	       else begin
+		 out_ctrl <= buffer_fifo_ctrl;
+		 out_data <= buffer_fifo_data;
+		 out_wr   <= 1'b1;
+	       end
+	     end
 				  
-				  else begin
-				    out_ctrl <= buffer_fifo_ctrl;
-					out_data <= buffer_fifo_data;
-					out_wr   <= 1'b1;
-				  end
-			  end
-			end //case : WAIT_FOR_INPUT_1
+	     else begin
+	       out_ctrl <= buffer_fifo_ctrl;
+	       out_data <= buffer_fifo_data;
+	       out_wr   <= 1'b1;
+	     end
+	   end
+	 end //case : WAIT_FOR_INPUT_1
 		    
-			/* * * * * * * * * * * * * * * * * * * * * * 
-			 * Suppose that every packet from the      *
-			 * two ports (MAC port 0 and MAC port 1)   *
-			 * has the same length , so we don't need  *
-			 * to do padding on them hence simplify    *
-			 * the work of this module                 *
-			 * * * * * * * * * * * * * * * * * * * * * */
+	 /* * * * * * * * * * * * * * * * * * * * * * 
+	  * Suppose that every packet from the      *
+	  * two ports (MAC port 0 and MAC port 1)   *
+	  * has the same length , so we don't need  *
+ 	  * to do padding on them hence simplify    *
+ 	  * the work of this module                 *
+ 	  * * * * * * * * * * * * * * * * * * * * * */
 			
-			NETWORK_CODING: begin
-			  if(!buffer_fifo_empty) begin
-			    buffer_fifo_rd_en <= 1'b1;
-				
-			  end
-			end //case : NETWORK_CODING
+	 NETWORK_CODING: begin
+	   if(!buffer_fifo_empty) begin
+	     buffer_fifo_rd_en <= 1'b1;
+	   end
+	 end //case : NETWORK_CODING
 	  
-			default: begin
-				if(!buffer_fifo_empty) begin
-				  buffer_fifo_rd_en <= 1'b1;
-					if(buffer_fifo_ctrl == `IO_QUEUE_STAGE_NUM) begin
-						if(buffer_fifo_data[31:16] == 16'd0 || buffer_fifo_data[31:16] == 16'd2) begin
-							in_wr_0           <= 1'b1;
-							waited_packet_num <= (buffer_fifo_data[31:16]==16'd0)?16'd2:16'd0;
-							state             <= STORE_INPUT_0;
-						end
-					end // if(buffer_fifo_ctrl == `IO_QUEUE_STAGE_NUM)
+	 default: begin
+	   if(!buffer_fifo_empty) begin
+	     buffer_fifo_rd_en <= 1'b1;
+	     if(buffer_fifo_ctrl == `IO_QUEUE_STAGE_NUM) begin
+	       if(buffer_fifo_data[31:16] == 16'd0 || buffer_fifo_data[31:16] == 16'd2) begin
+		 in_wr_0           <= 1'b1;
+		 waited_packet_num <= (buffer_fifo_data[31:16]==16'd0)?16'd2:16'd0;
+		 state             <= STORE_INPUT_0;
+	       end
+	     end // if(buffer_fifo_ctrl == `IO_QUEUE_STAGE_NUM)
 					
-					else begin
-						out_ctrl <= buffer_fifo_ctrl;
-						out_data <= buffer_fifo_data;
-						out_wr   <= 1'b1;
-					end
-				end // if(!buffer_fifo_empty)
-			end // case : WAIT_FOR_INPUT_0
+	     else begin
+	       out_ctrl <= buffer_fifo_ctrl;
+	       out_data <= buffer_fifo_data;
+	       out_wr   <= 1'b1;
+	     end
+	   end // if(!buffer_fifo_empty)
+         end // case : WAIT_FOR_INPUT_0
 		
-		endcase // case(state)
-	  end // else
+       endcase // case(state)
+     end // else
    end // always @(posedge clk)
    
 endmodule // XOR_network_coding
